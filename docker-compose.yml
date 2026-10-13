@@ -1,0 +1,27 @@
+# Local PostgreSQL for development. Optional: a natively installed
+# PostgreSQL works just as well.
+#
+# The user, password and database match the default DATABASE_URL in
+# backend/.env.example, so `docker compose up -d` is the whole database setup.
+# The app creates its own tables on first start.
+services:
+  postgres:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: outreach
+      POSTGRES_PASSWORD: outreach
+      POSTGRES_DB: outreach
+    # Set POSTGRES_PORT if 5432 is already taken on your machine, and use the
+    # same port in DATABASE_URL.
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - outreach-pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U outreach -d outreach"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+volumes:
+  outreach-pgdata:

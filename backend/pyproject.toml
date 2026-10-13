@@ -1,0 +1,68 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "outreach"
+version = "0.1.0"
+description = "Finds public developer conversations where someone has the problem our product solves."
+requires-python = ">=3.11"
+
+dependencies = [
+  # api
+  "fastapi>=0.115",
+  "uvicorn[standard]>=0.32",
+  "pydantic>=2.9",
+  "pydantic-settings>=2.6",
+  "email-validator>=2.2",
+
+  # accounts
+  "argon2-cffi>=23.1",
+  "pyjwt>=2.9",
+
+  # database
+  "sqlalchemy[asyncio]>=2.0",
+  "asyncpg>=0.30",
+  "alembic>=1.14",
+  "greenlet>=3.1",
+
+  # http
+  "httpx>=0.28",
+  "tenacity>=9.0",
+
+  # website crawl: html to markdown, and link extraction
+  "trafilatura>=2.0",
+  "lxml>=5.3",
+
+  "structlog>=24.4",
+]
+
+[project.optional-dependencies]
+dev = [
+  "pytest>=8.3",
+  "pytest-asyncio>=0.24",
+  "respx>=0.22",
+  "ruff>=0.8",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/outreach"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "UP", "B", "SIM", "RUF"]
+
+# Deliberately not enabled:
+#   BLE  blind-except. The crawler must survive one malformed page out of
+#        five hundred. Every broad catch here is logged and scoped to a
+#        single page or a single optional lookup.
+#   S    bandit. Add it when there is anything security sensitive to check.
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
+# So the tests can import the evaluation harness, which lives beside src.
+pythonpath = ["."]

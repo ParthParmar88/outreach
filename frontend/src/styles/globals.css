@@ -1,0 +1,23 @@
+/* MUI's CssBaseline does the reset and paints the background from the theme.
+   Only page-level things that MUI cannot express belong here. */
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+/* Long evidence quotes and issue titles must never widen the page. */
+body {
+  overflow-wrap: anywhere;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
